@@ -1,0 +1,1 @@
+This file was used to commit the resources directory to git.
