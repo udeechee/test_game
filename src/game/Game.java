@@ -32,6 +32,16 @@ import resource.ResourceLoader;
  * Original By Tareq 12/26/2014.
  *
  * Changes and updates by AI started on 06/02/2018.
+ *
+ *
+ *
+ * General Notes:
+ *
+ *      - The character himself seems to be on a finite state machine. That is, he is always on a single state,
+ *          doing a single action until it is done.
+ *      - This code is a working prototype of a game but it is also entirely procedural, which is a shame because
+ *          it is in Java.
+ *      - The addition of motion blur to a game that is far from complete is both commendable and humorous.
  */
 public class Game extends Application implements EventHandler<ActionEvent> {
 
@@ -112,6 +122,10 @@ public class Game extends Application implements EventHandler<ActionEvent> {
 
         });
         root.setOnMouseClicked(e -> {
+                    /**
+                     * This chunk of code prints out the mouse's coords and then
+                     *  toggles the visibility tof the block.
+                     */
             if (e.getButton() == MouseButton.SECONDARY) {
                 System.out.println(e.getX() + " - " + e.getY());
                 if (editor) {
@@ -124,7 +138,11 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                     }
                 }
                 editor = !editor;
-            } else if (e.getButton() == MouseButton.PRIMARY) {
+            }
+            /**
+             * This chunk of code updates the type of block and then add its to the world.
+             */
+            else if (e.getButton() == MouseButton.PRIMARY) {
                 view = new ImageView(res.getBlocks().returnBlock(typechange));
                 view.translateXProperty().bind(res.getGround1().translateXProperty().add(view.getX()));
                 addToWorld(view);
@@ -150,6 +168,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         }
         );
 
+        // Initializers.
         initMotionListeners();
 
         initResourses();
@@ -161,6 +180,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         initCollisionDetection();
         root.setScaleShape(true);
 
+        // Looks like an unused music loader.
         /*
          Media media = new Media("file:///c:/Untitled%20Folder/game/theme.mp3");
          MediaPlayer mediaPlayer   = new MediaPlayer(media);
@@ -170,11 +190,21 @@ public class Game extends Application implements EventHandler<ActionEvent> {
     }
 
     private void initWorld() {
+
+        // Seemingly the curve to define the jump. Class is empty.
         jumpCurve = new QuadCurve();
+
+        // Seems to be a motion blur mech.
         motionBlur = new MotionBlur();
+
+        // Seems to be the defined character hitbox?
         characterRect = new Rectangle();
+
+        // Possibly to do with animation?
         translateTransition = new TranslateTransition();
         translateTransition.setInterpolator(Interpolator.EASE_IN);
+
+        // Defined character properties?
         characterRect.setFill(Color.TRANSPARENT);
         characterRect.setStroke(Color.GREY);
         characterRect.setHeight(res.getCharacter().getBoundsInParent().getHeight() - 50);
@@ -182,6 +212,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         characterRect.xProperty().bind(res.getCharacter().translateXProperty().add(res.getCharacter().getBoundsInParent().getWidth() / 2.0 - 5.0));
         characterRect.yProperty().bind(res.getCharacter().translateYProperty().add(30));
 
+        // Mechs for the jump, not in a class.
         jumpTransition = new PathTransition(Duration.millis(1000), jumpCurve, res.getCharacter());
         jumpCurve.startXProperty().bind(res.getCharacter().translateXProperty().add(27).add(res.getCharacter().xProperty()));
         jumpCurve.startYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2).add(res.getCharacter().xProperty()));
@@ -192,6 +223,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         jumpCurve.endXProperty().bind(res.getCharacter().translateXProperty().add(25 * 10).add(47).add(res.getCharacter().xProperty()));
         jumpCurve.endYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2).add(res.getCharacter().xProperty()));
 
+        // Background, items, and more.
         res.getSky1().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-3.5));
         res.getSky2().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-3.5).add(999));
         res.getGround1().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-2));
@@ -207,6 +239,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         jumpCurve.setStroke(Color.BLACK);
         res.getDust().setVisible(false);
 
+        // Function to actually add the entities to the world.
         addToWorld(
                 res.getSky1(),
                 res.getSky2(),
@@ -217,11 +250,12 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                 res.getGround2(),
                 res.getDust(),
                 res.getCharacter()
-                
+
         );
 
     }
 
+    // Seemingly to initalize the game and the animation.
     private void initGame() {
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(33.33), this));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -230,6 +264,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
 
     }
 
+    // To initialize/load the resources.
     private void initResourses() {
 //        res = new Resourses();
         res = new ResourceLoader();
@@ -244,6 +279,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         root.getChildren().add(8, n);
     }
 
+    // Seems to be the general event handler.
     @Override
     public void handle(ActionEvent event) {
         pace30FPS++;
@@ -251,6 +287,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         pace5FPS = (pace30FPS % 6 == 0) ? pace5FPS + 1 : pace5FPS;
         pace0_5FPS = (pace30FPS % 60 == 0) ? pace0_5FPS + 1 : pace0_5FPS;
         if (collisiondelay == 0) {
+            // If I had to guess this is why the sliding can result in the character going through objects/below the ground.
             if (slidingState) {
                 res.getCharacter().setImage(res.getImgSlide());
                 res.getDust().setImage(res.getImgsDust()[pace15FPS % 6]);
@@ -329,6 +366,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         }
     }
 
+    // Seems to be what processes the input.
     private void initMotionListeners() {
         root.requestFocus();
         root.setOnKeyPressed(e -> {
@@ -493,6 +531,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                     }
                     break;
                 case UP:
+                    // Cute but the dust is in the wrong place. It is not on the player.
                     res.getDust().setVisible(false);
                     break;
                 default:
@@ -502,6 +541,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         });
     }
 
+    // Code to make the view of the character move left.
     private void jumpLeft() {
         if (delay > 25) {
             jumpCurve.startXProperty().bind(res.getCharacter().translateXProperty().add(47).add(res.getCharacter().xProperty()));
@@ -524,6 +564,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         }
     }
 
+    // Code to make the view of the character move right.
     private void jumpRight() {
         if (delay > 25) {
             jumpCurve.startXProperty().bind(res.getCharacter().translateXProperty().add(47));
@@ -546,6 +587,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         }
     }
 
+    // Procedural collision detection.
     private void initCollisionDetection() {
         characterRect.xProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             if (delay < 40) {
@@ -610,6 +652,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
 
         }
         );
+        // Um?
         characterRect.yProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             for (ImageView iv : list) {
                 Bounds b = iv.getBoundsInParent();
@@ -646,6 +689,8 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         });
     }
 
+    // I thought this may have been a method to keep the "world" going with the running player, used with the "rebindWorld"
+    //      method?
     private void unbindWorld() {
         for (Node n : root.getChildren()) {
             n.translateXProperty().unbind();
@@ -655,6 +700,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
 
     }
 
+    // See comment on "unbindWorld()" method.
     private void rebindWorld(boolean left) {
 
         res.getSky1().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-3.5));
