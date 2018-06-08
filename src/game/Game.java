@@ -26,6 +26,7 @@ import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import resource.ResourceLoader;
 
 /**
  * Original By Tareq 12/26/2014.
@@ -35,10 +36,11 @@ import javafx.util.Duration;
 public class Game extends Application implements EventHandler<ActionEvent> {
 
     public static void main(String[] args) {
+        ResourceLoader resourceLoader = new ResourceLoader();
         Application.launch(args);
     }
 
-    Resourses res;
+    ResourceLoader res;
     Pane root;
     boolean runningState;
     boolean shootingState;
@@ -123,8 +125,8 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                 }
                 editor = !editor;
             } else if (e.getButton() == MouseButton.PRIMARY) {
-                view = new ImageView(res.blocks.returnBlock(typechange));
-                view.translateXProperty().bind(res.ground1.translateXProperty().add(view.getX()));
+                view = new ImageView(res.getBlocks().returnBlock(typechange));
+                view.translateXProperty().bind(res.getGround1().translateXProperty().add(view.getX()));
                 addToWorld(view);
                 list.add(view);
 
@@ -138,8 +140,8 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                         break;
                     } else if (j == list.size() - 2) {
                         typechange++;
-                        typechange = typechange % res.imgsBlocks.length;
-                        view.setImage(res.blocks.returnBlock(typechange));
+                        typechange = typechange % res.getImgsBlocks().length;
+                        view.setImage(res.getBlocks().returnBlock(typechange));
 
                     }
                 }
@@ -175,46 +177,46 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         translateTransition.setInterpolator(Interpolator.EASE_IN);
         characterRect.setFill(Color.TRANSPARENT);
         characterRect.setStroke(Color.GREY);
-        characterRect.setHeight(res.character.getBoundsInParent().getHeight() - 50);
+        characterRect.setHeight(res.getCharacter().getBoundsInParent().getHeight() - 50);
         characterRect.setWidth(10);
-        characterRect.xProperty().bind(res.character.translateXProperty().add(res.character.getBoundsInParent().getWidth() / 2.0 - 5.0));
-        characterRect.yProperty().bind(res.character.translateYProperty().add(30));
+        characterRect.xProperty().bind(res.getCharacter().translateXProperty().add(res.getCharacter().getBoundsInParent().getWidth() / 2.0 - 5.0));
+        characterRect.yProperty().bind(res.getCharacter().translateYProperty().add(30));
 
-        jumpTransition = new PathTransition(Duration.millis(1000), jumpCurve, res.character);
-        jumpCurve.startXProperty().bind(res.character.translateXProperty().add(27).add(res.character.xProperty()));
-        jumpCurve.startYProperty().bind(res.character.translateYProperty().add(res.character.getFitHeight() / 2).add(res.character.xProperty()));
+        jumpTransition = new PathTransition(Duration.millis(1000), jumpCurve, res.getCharacter());
+        jumpCurve.startXProperty().bind(res.getCharacter().translateXProperty().add(27).add(res.getCharacter().xProperty()));
+        jumpCurve.startYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2).add(res.getCharacter().xProperty()));
 
-        jumpCurve.controlXProperty().bind(res.character.translateXProperty().add(25 * 10 / 2).add(27).add(res.character.xProperty()));
-        jumpCurve.controlYProperty().bind(res.character.translateYProperty().add(-80).add(res.character.xProperty()));
+        jumpCurve.controlXProperty().bind(res.getCharacter().translateXProperty().add(25 * 10 / 2).add(27).add(res.getCharacter().xProperty()));
+        jumpCurve.controlYProperty().bind(res.getCharacter().translateYProperty().add(-80).add(res.getCharacter().xProperty()));
 
-        jumpCurve.endXProperty().bind(res.character.translateXProperty().add(25 * 10).add(47).add(res.character.xProperty()));
-        jumpCurve.endYProperty().bind(res.character.translateYProperty().add(res.character.getFitHeight() / 2).add(res.character.xProperty()));
+        jumpCurve.endXProperty().bind(res.getCharacter().translateXProperty().add(25 * 10).add(47).add(res.getCharacter().xProperty()));
+        jumpCurve.endYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2).add(res.getCharacter().xProperty()));
 
-        res.sky1.translateXProperty().bind(res.character.translateXProperty().divide(-3.5));
-        res.sky2.translateXProperty().bind(res.character.translateXProperty().divide(-3.5).add(999));
-        res.ground1.translateXProperty().bind(res.character.translateXProperty().divide(-2));
-        res.ground2.translateXProperty().bind(res.character.translateXProperty().divide(-2).add(1000));
-        res.mountain1.translateXProperty().bind(res.character.translateXProperty().divide(-3));
-        res.mountain2.translateXProperty().bind(res.character.translateXProperty().divide(-3).add(1000));
-        res.gun.setVisible(false);
-        res.gun.translateXProperty().bind(res.character.translateXProperty().add(30));
-        res.gun.translateYProperty().bind(res.character.translateYProperty().add(42));
+        res.getSky1().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-3.5));
+        res.getSky2().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-3.5).add(999));
+        res.getGround1().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-2));
+        res.getGround2().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-2).add(1000));
+        res.getMountain1().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-3));
+        res.getMountain2().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-3).add(1000));
+        res.getGun().setVisible(false);
+        res.getGun().translateXProperty().bind(res.getCharacter().translateXProperty().add(30));
+        res.getGun().translateYProperty().bind(res.getCharacter().translateYProperty().add(42));
         Rectangle r = new Rectangle(0, 280, 2000, 100);
         r.setFill(new Color(70.0 / 255.0, 38.0 / 255.0, 25 / 255.0, 1.0));
         jumpCurve.setFill(Color.TRANSPARENT);
         jumpCurve.setStroke(Color.BLACK);
-        res.dust.setVisible(false);
+        res.getDust().setVisible(false);
 
         addToWorld(
-                res.sky1,
-                res.sky2,
-                res.mountain1,
-                res.mountain2,
+                res.getSky1(),
+                res.getSky2(),
+                res.getMountain1(),
+                res.getMountain2(),
                 r,
-                res.ground1,
-                res.ground2,
-                res.dust,
-                res.character
+                res.getGround1(),
+                res.getGround2(),
+                res.getDust(),
+                res.getCharacter()
                 
         );
 
@@ -224,12 +226,13 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(33.33), this));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
-        translateAnim = new TranslateTransition(Duration.millis(5000), res.character);
+        translateAnim = new TranslateTransition(Duration.millis(5000), res.getCharacter());
 
     }
 
     private void initResourses() {
-        res = new Resourses();
+//        res = new Resourses();
+        res = new ResourceLoader();
         res.loadResourses();
     }
 
@@ -249,32 +252,32 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         pace0_5FPS = (pace30FPS % 60 == 0) ? pace0_5FPS + 1 : pace0_5FPS;
         if (collisiondelay == 0) {
             if (slidingState) {
-                res.character.setImage(res.imgSlide);
-                res.dust.setImage(res.imgsDust[pace15FPS % 6]);
-                res.character.setViewport(new Rectangle2D(0, 0, 340, 180));
+                res.getCharacter().setImage(res.getImgSlide());
+                res.getDust().setImage(res.getImgsDust()[pace15FPS % 6]);
+                res.getCharacter().setViewport(new Rectangle2D(0, 0, 340, 180));
             } else if (shootingState && jumpTransition != null && jumpTransition.getStatus() == PathTransition.Status.STOPPED) {
                 if (runningState) {
-                    res.character.setImage(res.imgsRunningShoot[pace15FPS % 12]);
-                    res.dust.setImage(res.imgsDust[pace15FPS % 6]);
+                    res.getCharacter().setImage(res.getImgsRunningShoot()[pace15FPS % 12]);
+                    res.getDust().setImage(res.getImgsDust()[pace15FPS % 6]);
 
                 } else {
-                    res.character.setImage(res.imgsStoppedShoot[pace0_5FPS % 2]);
+                    res.getCharacter().setImage(res.getImgsStoppedShoot()[pace0_5FPS % 2]);
                 }
 
             } else if (!shootingState && jumpTransition != null && jumpTransition.getStatus() == PathTransition.Status.STOPPED) {
                 if (runningState) {
-                    res.character.setImage(res.imgsRunning[pace30FPS % res.imgsRunning.length]);
-                    res.dust.setImage(res.imgsDust[pace15FPS % 6]);
+                    res.getCharacter().setImage(res.getImgsRunning()[pace30FPS % res.getImgsRunning().length]);
+                    res.getDust().setImage(res.getImgsDust()[pace15FPS % 6]);
 
                 } else {
-                    res.character.setImage(res.imgsStopped[pace15FPS % res.imgsStopped.length]);
+                    res.getCharacter().setImage(res.getImgsStopped()[pace15FPS % res.getImgsStopped().length]);
                 }
             } else if (jumpTransition != null && jumpTransition.getStatus() == PathTransition.Status.RUNNING) {
                 if (shootingState) {
-                    res.character.setImage(res.imgsJumpingShoot);
-                    res.dust.setImage(res.imgsDust[pace15FPS % 6]);
+                    res.getCharacter().setImage(res.getImgsJumpingShoot());
+                    res.getDust().setImage(res.getImgsDust()[pace15FPS % 6]);
                 } else {
-                    res.character.setImage(res.imgsJumping);
+                    res.getCharacter().setImage(res.getImgsJumping());
 
                 }
             }
@@ -285,27 +288,27 @@ public class Game extends Application implements EventHandler<ActionEvent> {
             if (delay > 0 && !right && motionblurEnabled) {
                 motionBlur.setAngle(-180);
                 motionBlur.setRadius(0);
-                res.mountain1.setEffect(motionBlur);
-                res.mountain2.setEffect(motionBlur);
-                res.ground1.setEffect(motionBlur);
-                res.ground2.setEffect(motionBlur);
+                res.getMountain1().setEffect(motionBlur);
+                res.getMountain2().setEffect(motionBlur);
+                res.getGround1().setEffect(motionBlur);
+                res.getGround2().setEffect(motionBlur);
 
             } else if (delay > 0 && right && motionblurEnabled) {
                 motionBlur.setAngle(0);
                 motionBlur.setRadius(0);
-                res.mountain1.setEffect(motionBlur);
-                res.mountain2.setEffect(motionBlur);
-                res.ground1.setEffect(motionBlur);
-                res.ground2.setEffect(motionBlur);
+                res.getMountain1().setEffect(motionBlur);
+                res.getMountain2().setEffect(motionBlur);
+                res.getGround1().setEffect(motionBlur);
+                res.getGround2().setEffect(motionBlur);
 
             }
         } else if (delay > 0 && jumpReleased && motionblurEnabled) {
             motionBlur.setAngle(90);
             motionBlur.setRadius((delay -= 4) * 0.7);
-            res.mountain1.setEffect(motionBlur);
-            res.mountain2.setEffect(motionBlur);
-            res.ground1.setEffect(motionBlur);
-            res.ground2.setEffect(motionBlur);
+            res.getMountain1().setEffect(motionBlur);
+            res.getMountain2().setEffect(motionBlur);
+            res.getGround1().setEffect(motionBlur);
+            res.getGround2().setEffect(motionBlur);
 
         } else {
             jumpReleased = false;
@@ -316,7 +319,7 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                     isFalling = false;
                     break;
                 } else if (ir == list.size() - 1 && characterRect.getY() < 177) {
-                    res.character.setTranslateY(res.character.getTranslateY() + 5);
+                    res.getCharacter().setTranslateY(res.getCharacter().getTranslateY() + 5);
                     isFalling = true;
                     break;
                 } else {
@@ -333,19 +336,19 @@ public class Game extends Application implements EventHandler<ActionEvent> {
             if (e.getCode() == KeyCode.LEFT && pressed == false) {
                 pressed = true;
                 if ((jumpTransition.getStatus() != Animation.Status.RUNNING)) {
-                    res.dust.setScaleX(1);
+                    res.getDust().setScaleX(1);
                     right = false;
-                    res.character.setScaleX(-1.0);
-                    res.dust.translateXProperty().bind(res.character.translateXProperty());
+                    res.getCharacter().setScaleX(-1.0);
+                    res.getDust().translateXProperty().bind(res.getCharacter().translateXProperty());
 
                     if (motionblurEnabled) {
                         motionBlur.setAngle(-180);
                         motionBlur.setRadius(delay * 0.5);
-                        res.mountain1.setEffect(motionBlur);
-                        res.mountain2.setEffect(motionBlur);
-                        res.ground1.setEffect(motionBlur);
-                        res.ground2.setEffect(motionBlur);
-                        res.dust.setEffect(motionBlur);
+                        res.getMountain1().setEffect(motionBlur);
+                        res.getMountain2().setEffect(motionBlur);
+                        res.getGround1().setEffect(motionBlur);
+                        res.getGround2().setEffect(motionBlur);
+                        res.getDust().setEffect(motionBlur);
                     }
                     if (jumpTransition.getStatus() == PathTransition.Status.STOPPED
                             && translateAnim.getStatus() != PathTransition.Status.RUNNING
@@ -358,20 +361,20 @@ public class Game extends Application implements EventHandler<ActionEvent> {
             } else if (e.getCode() == KeyCode.RIGHT && pressed == false) {
                 pressed = true;
                 if ((jumpTransition.getStatus() != Animation.Status.RUNNING)) {
-                    res.dust.setScaleX(-1);
-                    res.character.setScaleX(+1.0);
+                    res.getDust().setScaleX(-1);
+                    res.getCharacter().setScaleX(+1.0);
                     right = true;
 
-                    res.dust.translateXProperty().bind(res.character.translateXProperty().add(-40));
-                    res.dust.translateYProperty().bind(res.character.translateYProperty().add(42));
+                    res.getDust().translateXProperty().bind(res.getCharacter().translateXProperty().add(-40));
+                    res.getDust().translateYProperty().bind(res.getCharacter().translateYProperty().add(42));
                     if (motionblurEnabled) {
                         motionBlur.setAngle(0);
                         motionBlur.setRadius(delay * 0.5);
-                        res.mountain1.setEffect(motionBlur);
-                        res.mountain2.setEffect(motionBlur);
-                        res.ground1.setEffect(motionBlur);
-                        res.ground2.setEffect(motionBlur);
-                        res.dust.setEffect(motionBlur);
+                        res.getMountain1().setEffect(motionBlur);
+                        res.getMountain2().setEffect(motionBlur);
+                        res.getGround1().setEffect(motionBlur);
+                        res.getGround2().setEffect(motionBlur);
+                        res.getDust().setEffect(motionBlur);
                     }
                     if (jumpTransition.getStatus() == PathTransition.Status.STOPPED
                             && translateAnim.getStatus() != PathTransition.Status.RUNNING
@@ -391,15 +394,15 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                 if (shootingState) {
                     TranslateTransition tt = new TranslateTransition(Duration.millis(700));
                     Bullet b;
-                    if (res.gun.getScaleX() == 1.0) {
-                        b = new Bullet(res.gun.getTranslateX() + 30, res.gun.getTranslateY() + 9, 3);
+                    if (res.getGun().getScaleX() == 1.0) {
+                        b = new Bullet(res.getGun().getTranslateX() + 30, res.getGun().getTranslateY() + 9, 3);
                         tt.setByX(1000);
                     } else {
 
-                        b = new Bullet(res.gun.getTranslateX(), res.gun.getTranslateY() + 9, 3);
+                        b = new Bullet(res.getGun().getTranslateX(), res.getGun().getTranslateY() + 9, 3);
                         tt.setByX(-1000);
                     }
-                    b.setScaleX(res.gun.getScaleX());
+                    b.setScaleX(res.getGun().getScaleX());
                     addToWorld(b);
                     tt.setNode(b);
 
@@ -414,8 +417,8 @@ public class Game extends Application implements EventHandler<ActionEvent> {
 
                 translateAnim.stop();
                 runningState = false;
-                res.dust.setVisible(false);
-                res.dust.setVisible(false);
+                res.getDust().setVisible(false);
+                res.getDust().setVisible(false);
                 jumpTransition.setCycleCount(1);
                 jumpTransition.play();
                 jumpTransition.setOnFinished(ev -> {
@@ -431,20 +434,20 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                     } else {
                         translateAnim.setByX(-150);
                     }
-                    res.character.setTranslateY(res.character.getTranslateY() + 56);
+                    res.getCharacter().setTranslateY(res.getCharacter().getTranslateY() + 56);
                     slidingState = true;
                     characterRect.setTranslateY(characterRect.getTranslateY() + 34);
-                    characterRect.setWidth(res.character.getBoundsInParent().getHeight());
+                    characterRect.setWidth(res.getCharacter().getBoundsInParent().getHeight());
                     characterRect.setHeight(10);
                     translateAnim.play();
                     translateAnim.setOnFinished((ActionEvent event) -> {
                         if (slidingState) {
                             slidingState = false;
 
-                            res.character.setTranslateY(res.character.getTranslateY() - 56);
-                            res.character.setViewport(new Rectangle2D(0, 0, 180, 340));
+                            res.getCharacter().setTranslateY(res.getCharacter().getTranslateY() - 56);
+                            res.getCharacter().setViewport(new Rectangle2D(0, 0, 180, 340));
                             characterRect.setTranslateY(characterRect.getTranslateY() - 34);
-                            characterRect.setHeight(res.character.getBoundsInParent().getHeight());
+                            characterRect.setHeight(res.getCharacter().getBoundsInParent().getHeight());
                             characterRect.setWidth(10);
 
                         }
@@ -460,37 +463,37 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                 case LEFT:
                     pressed = false;
                     translateAnim.stop();
-                    res.dust.setVisible(false);
+                    res.getDust().setVisible(false);
                     decrease = (double) delay / 10.0;
                     runningState = false;
                     delay = 0;
                     if (motionblurEnabled) {
                         motionBlur.setRadius(0);
-                        res.mountain1.setEffect(motionBlur);
-                        res.mountain2.setEffect(motionBlur);
-                        res.ground1.setEffect(motionBlur);
-                        res.ground2.setEffect(motionBlur);
-                        res.dust.setEffect(motionBlur);
+                        res.getMountain1().setEffect(motionBlur);
+                        res.getMountain2().setEffect(motionBlur);
+                        res.getGround1().setEffect(motionBlur);
+                        res.getGround2().setEffect(motionBlur);
+                        res.getDust().setEffect(motionBlur);
                     }
                     break;
                 case RIGHT:
                     pressed = false;
-                    res.dust.setVisible(false);
+                    res.getDust().setVisible(false);
                     translateAnim.stop();
                     decrease = (double) delay / 10.0;
                     runningState = false;
                     delay = 0;
                     if (motionblurEnabled) {
                         motionBlur.setRadius(0);
-                        res.mountain1.setEffect(motionBlur);
-                        res.mountain2.setEffect(motionBlur);
-                        res.ground1.setEffect(motionBlur);
-                        res.ground2.setEffect(motionBlur);
-                        res.dust.setEffect(motionBlur);
+                        res.getMountain1().setEffect(motionBlur);
+                        res.getMountain2().setEffect(motionBlur);
+                        res.getGround1().setEffect(motionBlur);
+                        res.getGround2().setEffect(motionBlur);
+                        res.getDust().setEffect(motionBlur);
                     }
                     break;
                 case UP:
-                    res.dust.setVisible(false);
+                    res.getDust().setVisible(false);
                     break;
                 default:
                     break;
@@ -501,45 +504,45 @@ public class Game extends Application implements EventHandler<ActionEvent> {
 
     private void jumpLeft() {
         if (delay > 25) {
-            jumpCurve.startXProperty().bind(res.character.translateXProperty().add(47).add(res.character.xProperty()));
-            jumpCurve.startYProperty().bind(res.character.translateYProperty().add(res.character.getFitHeight() / 2).add(res.character.xProperty()));
+            jumpCurve.startXProperty().bind(res.getCharacter().translateXProperty().add(47).add(res.getCharacter().xProperty()));
+            jumpCurve.startYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2).add(res.getCharacter().xProperty()));
 
-            jumpCurve.controlXProperty().bind(res.character.translateXProperty().add(-delay * 10 / 2).add(47).add(res.character.xProperty()));
-            jumpCurve.controlYProperty().bind(res.character.translateYProperty().add(-80).add(res.character.xProperty()));
+            jumpCurve.controlXProperty().bind(res.getCharacter().translateXProperty().add(-delay * 10 / 2).add(47).add(res.getCharacter().xProperty()));
+            jumpCurve.controlYProperty().bind(res.getCharacter().translateYProperty().add(-80).add(res.getCharacter().xProperty()));
 
-            jumpCurve.endXProperty().bind(res.character.translateXProperty().add(-delay * 10).add(47).add(res.character.xProperty()));
-            jumpCurve.endYProperty().bind(res.character.translateYProperty().add(res.character.getFitHeight() / 2).add(res.character.xProperty()));
+            jumpCurve.endXProperty().bind(res.getCharacter().translateXProperty().add(-delay * 10).add(47).add(res.getCharacter().xProperty()));
+            jumpCurve.endYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2).add(res.getCharacter().xProperty()));
         } else {
-            jumpCurve.startXProperty().bind(res.character.translateXProperty().add(47).add(res.character.xProperty()));
-            jumpCurve.startYProperty().bind(res.character.translateYProperty().add(res.character.getFitHeight() / 2).add(res.character.xProperty()));
+            jumpCurve.startXProperty().bind(res.getCharacter().translateXProperty().add(47).add(res.getCharacter().xProperty()));
+            jumpCurve.startYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2).add(res.getCharacter().xProperty()));
 
-            jumpCurve.controlXProperty().bind(res.character.translateXProperty().add(-25 * 10 / 2).add(47).add(res.character.xProperty()));
-            jumpCurve.controlYProperty().bind(res.character.translateYProperty().add(-80).add(res.character.xProperty()));
+            jumpCurve.controlXProperty().bind(res.getCharacter().translateXProperty().add(-25 * 10 / 2).add(47).add(res.getCharacter().xProperty()));
+            jumpCurve.controlYProperty().bind(res.getCharacter().translateYProperty().add(-80).add(res.getCharacter().xProperty()));
 
-            jumpCurve.endXProperty().bind(res.character.translateXProperty().add(-25 * 10).add(47).add(res.character.xProperty()));
-            jumpCurve.endYProperty().bind(res.character.translateYProperty().add(res.character.getFitHeight() / 2).add(res.character.xProperty()));
+            jumpCurve.endXProperty().bind(res.getCharacter().translateXProperty().add(-25 * 10).add(47).add(res.getCharacter().xProperty()));
+            jumpCurve.endYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2).add(res.getCharacter().xProperty()));
         }
     }
 
     private void jumpRight() {
         if (delay > 25) {
-            jumpCurve.startXProperty().bind(res.character.translateXProperty().add(47));
-            jumpCurve.startYProperty().bind(res.character.translateYProperty().add(res.character.getFitHeight() / 2));
+            jumpCurve.startXProperty().bind(res.getCharacter().translateXProperty().add(47));
+            jumpCurve.startYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2));
 
-            jumpCurve.controlXProperty().bind(res.character.translateXProperty().add(delay * 10 / 2).add(27));
-            jumpCurve.controlYProperty().bind(res.character.translateYProperty().add(-80));
+            jumpCurve.controlXProperty().bind(res.getCharacter().translateXProperty().add(delay * 10 / 2).add(27));
+            jumpCurve.controlYProperty().bind(res.getCharacter().translateYProperty().add(-80));
 
-            jumpCurve.endXProperty().bind(res.character.translateXProperty().add(delay * 10).add(47));
-            jumpCurve.endYProperty().bind(res.character.translateYProperty().add(res.character.getFitHeight() / 2));
+            jumpCurve.endXProperty().bind(res.getCharacter().translateXProperty().add(delay * 10).add(47));
+            jumpCurve.endYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2));
         } else {
-            jumpCurve.startXProperty().bind(res.character.translateXProperty().add(47));
-            jumpCurve.startYProperty().bind(res.character.translateYProperty().add(res.character.getFitHeight() / 2));
+            jumpCurve.startXProperty().bind(res.getCharacter().translateXProperty().add(47));
+            jumpCurve.startYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2));
 
-            jumpCurve.controlXProperty().bind(res.character.translateXProperty().add(25 * 10 / 2).add(47));
-            jumpCurve.controlYProperty().bind(res.character.translateYProperty().add(-80));
+            jumpCurve.controlXProperty().bind(res.getCharacter().translateXProperty().add(25 * 10 / 2).add(47));
+            jumpCurve.controlYProperty().bind(res.getCharacter().translateYProperty().add(-80));
 
-            jumpCurve.endXProperty().bind(res.character.translateXProperty().add(25 * 10).add(47));
-            jumpCurve.endYProperty().bind(res.character.translateYProperty().add(res.character.getFitHeight() / 2));
+            jumpCurve.endXProperty().bind(res.getCharacter().translateXProperty().add(25 * 10).add(47));
+            jumpCurve.endYProperty().bind(res.getCharacter().translateYProperty().add(res.getCharacter().getFitHeight() / 2));
         }
     }
 
@@ -552,33 +555,33 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                 if (motionblurEnabled) {
                     motionBlur.setAngle(180);
                     motionBlur.setRadius(delay * 0.5);
-                    res.mountain1.setEffect(motionBlur);
-                    res.mountain2.setEffect(motionBlur);
-                    res.ground1.setEffect(motionBlur);
-                    res.ground2.setEffect(motionBlur);
-                    res.dust.setEffect(motionBlur);
+                    res.getMountain1().setEffect(motionBlur);
+                    res.getMountain2().setEffect(motionBlur);
+                    res.getGround1().setEffect(motionBlur);
+                    res.getGround2().setEffect(motionBlur);
+                    res.getDust().setEffect(motionBlur);
                 }
             } else {
                 if (motionblurEnabled) {
                     motionBlur.setAngle(0);
                     motionBlur.setRadius(delay * 0.5);
-                    res.mountain1.setEffect(motionBlur);
-                    res.mountain2.setEffect(motionBlur);
-                    res.ground1.setEffect(motionBlur);
-                    res.ground2.setEffect(motionBlur);
-                    res.dust.setEffect(motionBlur);
+                    res.getMountain1().setEffect(motionBlur);
+                    res.getMountain2().setEffect(motionBlur);
+                    res.getGround1().setEffect(motionBlur);
+                    res.getGround2().setEffect(motionBlur);
+                    res.getDust().setEffect(motionBlur);
                 }
             }
-            if (res.character.getTranslateX() + res.character.getX() < -50 && shift) {
+            if (res.getCharacter().getTranslateX() + res.getCharacter().getX() < -50 && shift) {
                 System.out.println("Go Right");
-                System.out.println(res.character.getX());
-                res.character.setX(res.character.getX() + 1000);
+                System.out.println(res.getCharacter().getX());
+                res.getCharacter().setX(res.getCharacter().getX() + 1000);
                 shift = false;
 
-            } else if (res.character.getTranslateX() + res.character.getX() > 950 && shift) {
+            } else if (res.getCharacter().getTranslateX() + res.getCharacter().getX() > 950 && shift) {
                 System.out.println("Go Left");
-                System.out.println(res.character.getX());
-                res.character.setX(res.character.getX() - 1000);
+                System.out.println(res.getCharacter().getX());
+                res.getCharacter().setX(res.getCharacter().getX() - 1000);
                 shift = false;
 
             } else if (jumpTransition.getStatus() != Animation.Status.RUNNING) {
@@ -586,18 +589,18 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                 for (ImageView rec : list) {
                     if (characterRect.intersects(rec.getBoundsInParent())) {
                         if (rec.getBoundsInParent().getMinY() > characterRect.getY() + characterRect.getHeight() * 0.7) {
-                            res.character.setTranslateY(res.character.getTranslateY() - 1);
+                            res.getCharacter().setTranslateY(res.getCharacter().getTranslateY() - 1);
                         } else if (right) {
                             translateAnim.stop();
-                            res.character.setImage(res.imgCollide);
+                            res.getCharacter().setImage(res.getImgCollide());
                             collisiondelay = 5;
-                            res.character.setTranslateX(res.character.getTranslateX() - 1);
+                            res.getCharacter().setTranslateX(res.getCharacter().getTranslateX() - 1);
                             delay = 0;
                         } else {
                             translateAnim.stop();
-                            res.character.setImage(res.imgCollide);
+                            res.getCharacter().setImage(res.getImgCollide());
                             collisiondelay = 5;
-                            res.character.setTranslateX(res.character.getTranslateX() + 1);
+                            res.getCharacter().setTranslateX(res.getCharacter().getTranslateX() + 1);
                             delay = 0;
                         }
                         break;
@@ -615,11 +618,11 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                     jumpReleased = true;
                     if (characterRect.getY() + characterRect.getHeight() - 1 < iv.getY() + b.getHeight() / 2) {
 
-                        res.character.setTranslateY(res.character.getTranslateY() - 2);
+                        res.getCharacter().setTranslateY(res.getCharacter().getTranslateY() - 2);
                         if (right) {
-                            res.character.setTranslateX(res.character.getTranslateX() + 0.25);
+                            res.getCharacter().setTranslateX(res.getCharacter().getTranslateX() + 0.25);
                         } else {
-                            res.character.setTranslateX(res.character.getTranslateX() - 0.25);
+                            res.getCharacter().setTranslateX(res.getCharacter().getTranslateX() - 0.25);
                         }
                         break;
                     } else if (b.contains(characterRect.getX() + characterRect.getWidth() / 2.0, characterRect.getY() - 5)
@@ -628,12 +631,12 @@ public class Game extends Application implements EventHandler<ActionEvent> {
                     } else {
 
                         if (right) {
-                            res.character.setTranslateX(res.character.getTranslateX() - 5);
+                            res.getCharacter().setTranslateX(res.getCharacter().getTranslateX() - 5);
                         } else {
-                            res.character.setTranslateX(res.character.getTranslateX() + 5);
+                            res.getCharacter().setTranslateX(res.getCharacter().getTranslateX() + 5);
                         }
 
-                        res.character.setTranslateY(res.character.getTranslateY() + iv.getY() + iv.getBoundsInParent().getHeight() - characterRect.getY() - characterRect.getHeight());
+                        res.getCharacter().setTranslateY(res.getCharacter().getTranslateY() + iv.getY() + iv.getBoundsInParent().getHeight() - characterRect.getY() - characterRect.getHeight());
 
                         break;
                     }
@@ -647,19 +650,19 @@ public class Game extends Application implements EventHandler<ActionEvent> {
         for (Node n : root.getChildren()) {
             n.translateXProperty().unbind();
         }
-        res.mountain2.setTranslateX(res.mountain2.getTranslateX() - 1000);
-        res.mountain1.setTranslateX(res.mountain1.getTranslateX() - 1000);
+        res.getMountain2().setTranslateX(res.getMountain2().getTranslateX() - 1000);
+        res.getMountain1().setTranslateX(res.getMountain1().getTranslateX() - 1000);
 
     }
 
     private void rebindWorld(boolean left) {
 
-        res.sky1.translateXProperty().bind(res.character.translateXProperty().divide(-3.5));
-        res.sky2.translateXProperty().bind(res.character.translateXProperty().divide(-3.5).add(999));
-        res.ground1.translateXProperty().bind(res.character.translateXProperty().divide(-2));
-        res.ground2.translateXProperty().bind(res.character.translateXProperty().divide(-2).add(1000));
-        res.mountain1.translateXProperty().bind(res.character.translateXProperty().divide(-3));
-        res.mountain2.translateXProperty().bind(res.character.translateXProperty().divide(-3).add(1000));
+        res.getSky1().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-3.5));
+        res.getSky2().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-3.5).add(999));
+        res.getGround1().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-2));
+        res.getGround2().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-2).add(1000));
+        res.getMountain1().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-3));
+        res.getMountain2().translateXProperty().bind(res.getCharacter().translateXProperty().divide(-3).add(1000));
 
     }
 }
