@@ -10,7 +10,7 @@ import java.io.File;
 
 public class ResourceLoader {
 
-    private static final String RESOURCE_DIR = "resources";
+    private static final String RESOURCE_DIR = "C:\\Users\\Owner\\IdeaProjects\\GamCopy\\resources";
 
     public ResourceLoader(){
         System.out.println("Loading Resources from: " + RESOURCE_DIR);
@@ -258,35 +258,35 @@ public class ResourceLoader {
 
             for (int i = 0; i < imgsRunning.length; i++) {
                 if (i < imgsRunning.length) {
-                    imgsRunning[i] = new Image(Resourses.class.getResourceAsStream("test/d (" + (i + 1) + ").png"));
+                    imgsRunning[i] = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/test/d (" + (i + 1) + ").png"));
                 }
                 if (i <= 11) {
-                    imgsRunningShoot[i] = new Image(Resourses.class.getResourceAsStream("character/shoot-" + i + ".png"));
+                    imgsRunningShoot[i] = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/character/shoot-" + i + ".png"));
                 }
                 if (i < imgsStopped.length) {
-                    imgsStopped[i] = new Image(Resourses.class.getResourceAsStream("test/b (" + (i + 1) + ").png"));
+                    imgsStopped[i] = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/test/b (" + (i + 1) + ").png"));
 
                 }
 
                 if (i < 2) {
-                    imgsStoppedShoot[i] = new Image(Resourses.class.getResourceAsStream("character/stoppedshoot" + i + ".png"));
+                    imgsStoppedShoot[i] = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/character/stoppedshoot" + i + ".png"));
                 }
                 if (i < 6) {
-                    imgsDust[i] = new Image(Resourses.class.getResourceAsStream("effects/blood_a_000" + (i + 1) + ".png"));
+                    imgsDust[i] = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/effects/blood_a_000" + (i + 1) + ".png"));
                 }
                 if (i < imgsBlocks.length) {
-                    imgsBlocks[i] = new Image(Resourses.class.getResourceAsStream("world/block" + (i) + ".png"));
+                    imgsBlocks[i] = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/world/block" + (i) + ".png"));
 
                 }
             }
-            imgSky = new Image(Resourses.class.getResourceAsStream("world/background.png"));
-            imgGround = new Image(Resourses.class.getResourceAsStream("world/ground.png"));
-            imgGun = new Image(Resourses.class.getResourceAsStream("world/gun.png"));
-            imgMountain = new Image(Resourses.class.getResourceAsStream("world/mountains.png"));
-            imgsJumpingShoot = new Image(Resourses.class.getResourceAsStream("character/jump2.png"));
-            imgsJumping = new Image(Resourses.class.getResourceAsStream("test/jumping.png"));
-            imgSlide = new Image(Resourses.class.getResourceAsStream("character/slide.png"));
-            imgCollide = new Image(Resourses.class.getResourceAsStream("test/collide.png"));
+            imgSky = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/world/background.png"));
+            imgGround = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/world/ground.png"));
+            imgGun = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/world/gun.png"));
+            imgMountain = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/world/mountains.png"));
+            imgsJumpingShoot = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/character/jump2.png"));
+            imgsJumping = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/test/jumping.png"));
+            imgSlide = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/character/slide.png"));
+            imgCollide = new Image(RESOURCE_DIR.getClass().getResourceAsStream("/test/collide.png"));
             attachDefaultImages();
 
         } catch (Exception e) {
