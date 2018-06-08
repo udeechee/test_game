@@ -266,7 +266,6 @@ public class Game extends Application implements EventHandler<ActionEvent> {
 
     // To initialize/load the resources.
     private void initResourses() {
-//        res = new Resourses();
         res = new ResourceLoader();
         res.loadResourses();
     }
